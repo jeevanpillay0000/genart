@@ -9,7 +9,7 @@ const sketch = () => {
   const createGrid = () => {
     let points = [];
 
-    const count = 6;
+    const count = 40;
 
     for (let x = 0; x < count; x++) {
       for (let y = 0; y < count; y++) {
@@ -23,8 +23,8 @@ const sketch = () => {
     return points;
   };
 
-  const points = createGrid();
-  const margin = 250;
+  const points = createGrid().filter(() => Math.random() > 0.5);
+  const margin = 400;
 
   return ({ context, width, height }) => {
     context.fillStyle = 'orange';
@@ -35,7 +35,7 @@ const sketch = () => {
       const y = lerp(margin, height - margin, v);
 
       context.beginPath();
-      context.arc(x, y, 40, 0, Math.PI * 2);
+      context.arc(x, y, 5, 0, Math.PI * 2);
       context.strokeStyle = 'red';
       context.lineWidth = 10;
       context.stroke();
