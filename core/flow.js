@@ -54,7 +54,7 @@ const sketch = () => {
       context.beginPath();
       context.moveTo(0, 0);
       // context.lineTo(res, 0);
-      context.font = `${64}px "Helvetica"`;
+      context.font = `${30}px "Helvetica"`;
       context.fillStyle = color;
       context.fillText("-", 0, 0);
       context.fill();
