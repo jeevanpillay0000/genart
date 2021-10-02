@@ -10,15 +10,17 @@ const settings = {
 const sketch = () => {
   const colorCount = random.rangeFloor(2, 6);
   const palette = random.shuffle(random.pick(palettes)).splice(0, colorCount);
-  const count = 50;
+
+  const COUNT = 125;
+  const PARTITIONS = 1;
 
   const createGrid = () => {
     let points = [];
-    for (let x = 0; x < count; x++) {
-      for (let y = 0; y < count; y++) {
-        const u = count <= 1 ? 0.5 : x / (count - 1);
-        const v = count <= 1 ? 0.5 : y / (count - 1);
-        const angle = (y / count) * Math.PI;
+    for (let x = 0; x < COUNT; x++) {
+      for (let y = 0; y < COUNT; y++) {
+        const u = COUNT <= 1 ? 0.5 : x / (COUNT - 1);
+        const v = COUNT <= 1 ? 0.5 : y / (COUNT - 1);
+        const angle = PARTITIONS * (y / COUNT) * Math.PI;
         points.push({
           color: random.pick(palette),
           position: [u, v],
@@ -30,7 +32,7 @@ const sketch = () => {
     return points;
   };
 
-  const points = createGrid().filter(() => random.value());
+  const points = createGrid().filter(() => random.value() > 0.75);
   const margin = 150;
 
   return ({context, width, height}) => {
@@ -40,7 +42,7 @@ const sketch = () => {
     var res = 20;
 
     points.forEach(data => {
-      const {position, angle} = data;
+      const {position, angle, color} = data;
       const [u, v] = position;
 
       const x = lerp(margin, width - margin, u);
@@ -48,13 +50,14 @@ const sketch = () => {
 
       context.save();
       context.translate(x, y);
-
       context.rotate(angle);
       context.beginPath();
       context.moveTo(0, 0);
-      context.lineTo(res, 0);
-      context.stroke();
-
+      // context.lineTo(res, 0);
+      context.font = `${64}px "Helvetica"`;
+      context.fillStyle = color;
+      context.fillText("-", 0, 0);
+      context.fill();
       context.restore();
     });
   };

@@ -1,17 +1,15 @@
-const canvasSketch = require('canvas-sketch');
-const { lerp } = require('canvas-sketch-util/math');
-const random = require('canvas-sketch-util/random');
-const palettes = require('nice-color-palettes');
+const canvasSketch = require("canvas-sketch");
+const {lerp} = require("canvas-sketch-util/math");
+const random = require("canvas-sketch-util/random");
+const palettes = require("nice-color-palettes");
 
 const settings = {
-  dimensions: [ 2048, 2048 ],
+  dimensions: [2048, 2048]
 };
 
 const sketch = () => {
   const colorCount = random.rangeFloor(2, 6);
-  const palette = random
-    .shuffle(random.pick(palettes))
-    .splice(0, colorCount)
+  const palette = random.shuffle(random.pick(palettes)).splice(0, colorCount);
 
   const createGrid = () => {
     let points = [];
@@ -28,9 +26,9 @@ const sketch = () => {
 
         points.push({
           color: random.pick(palette),
-          position: [ u, v ],
+          position: [u, v],
           rotation,
-          radius,
+          radius
         });
       }
     }
@@ -38,18 +36,17 @@ const sketch = () => {
     return points;
   };
 
-
   const points = createGrid().filter(() => random.value() > 0.5);
   const margin = 400;
 
-  return ({ context, width, height }) => {
+  return ({context, width, height}) => {
     context.fillStyle = random.pick(palette);
     context.fillRect(0, 0, width, height);
 
-    points.forEach((point) => {
-      const { position, radius, color, rotation } = point;
+    points.forEach(point => {
+      const {position, radius, color, rotation} = point;
 
-      const [ u, v ] = position
+      const [u, v] = position;
 
       const x = lerp(margin, width - margin, u);
       const y = lerp(margin, height - margin, v);
@@ -64,7 +61,7 @@ const sketch = () => {
       context.font = `${radius * width}px "Helvetica"`;
       context.translate(x, y);
       context.rotate(rotation);
-      context.fillText('=', 0, 0);
+      context.fillText("=", 0, 0);
       context.restore();
     });
   };
