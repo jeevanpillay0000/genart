@@ -20,6 +20,7 @@
     "perspective-camera": "^2.0.1",
     "primitive-icosphere": "^1.0.2",
     "regl": "^2.1.0",
-    "seed-random": "^2.2.0"
+    "seed-random": "^2.2.0",
+    "three": "^0.133.0"
   }
 }

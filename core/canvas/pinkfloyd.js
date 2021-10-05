@@ -20,24 +20,29 @@ const sketch = () => {
     context.fillStyle = bg;
     context.fillRect(0, 0, width, height);
 
+    context.beginPath();
     context.arc(width / 2, height / 2, width / 3, 0, Math.PI * 2, false);
     context.strokeStyle = main;
     context.lineWidth = 40;
     context.stroke();
-
-    context.beginPath();
-    const gap = 150;
-    const yDisplacement = 0;
-    const left = width / 2 - gap;
-    const right = width / 2 + gap;
-    context.moveTo(left, right - yDisplacement);
-    context.lineTo(right, right - yDisplacement);
-    context.lineTo(left + gap, (right - gap) * Math.cos(Math.PI / 6));
     context.closePath();
 
-    // the fill color
     context.fillStyle = main;
-    context.fill();
+    context.fillRect(100, 100, width / 2, height / 2);
+
+    // context.beginPath();
+    // const gap = 150;
+    // const yDisplacement = 0;
+    // const left = width / 2 - gap;
+    // const right = width / 2 + gap;
+    // context.moveTo(left, right - yDisplacement);
+    // context.lineTo(right, right - yDisplacement);
+    // context.lineTo(left + gap, (right - gap) * Math.cos(Math.PI / 6));
+    // context.closePath();
+    //
+    // // the fill color
+    // context.fillStyle = main;
+    // context.fill();
 
     // to be removed: for context
     // context.beginPath();

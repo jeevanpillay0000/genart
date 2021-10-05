@@ -4,7 +4,7 @@ const random = require("canvas-sketch-util/random");
 const palettes = require("nice-color-palettes");
 
 const settings = {
-  dimensions: [500, 500]
+  dimensions: [1000, 1000]
 };
 
 const sketch = () => {
@@ -22,8 +22,7 @@ const sketch = () => {
       for (var j = 0; j < height; j += step) {
         const x = lerp(margin, width - margin, i / width);
         const y = lerp(margin, height - margin, j / width);
-        const size = step - (step / y) * 100;
-        console.log(size);
+        const size = step - (step / y) * 50;
         const opacity = fade == "down" ? 1 - y / height : y / height;
         context.fillStyle = main(1);
         context.fillRect(x, y, size, size);
