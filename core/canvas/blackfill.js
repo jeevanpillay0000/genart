@@ -4,13 +4,13 @@ const random = require("canvas-sketch-util/random");
 const palettes = require("nice-color-palettes");
 
 const settings = {
-  dimensions: [2000, 2000]
+  dimensions: [1000, 1000]
 };
 
 const sketch = () => {
   const colorCount = random.rangeFloor(2, 6);
   const palette = random.shuffle(random.pick(palettes)).splice(0, colorCount);
-  const fillType = [75, 100, 150];
+  const fillType = [15, 22, 35];
 
   const createFill = () => {
     const count = random.pick(fillType);
@@ -20,7 +20,7 @@ const sketch = () => {
         const u = random.value();
         const v = random.value();
 
-        const radius = random.value() * 10;
+        const radius = 0.1;
 
         fills.push({
           position: [u, v],
@@ -31,11 +31,10 @@ const sketch = () => {
     return fills;
   };
 
-  const createGrid = () => {
+  const createGrid = fills => {
     let points = [];
 
-    const count = 3;
-    const fill = createFill();
+    const count = 100;
 
     for (let x = 0; x < count; x++) {
       for (let y = 0; y < count; y++) {
@@ -44,7 +43,7 @@ const sketch = () => {
 
         points.push({
           position: [u, v],
-          fill
+          fill: random.pick(fills)
         });
       }
     }
@@ -53,12 +52,14 @@ const sketch = () => {
   };
 
   const fills = createFill();
-  const grid = createGrid();
-  const margin = 200;
+  const grid = createGrid(fills);
+  const margin = 0;
 
   return ({context, width, height}) => {
     context.fillStyle = "white";
     context.fillRect(0, 0, width, height);
+
+    const fillers = [];
 
     grid.forEach(data => {
       const {position, fill} = data;
@@ -75,37 +76,16 @@ const sketch = () => {
 
         context.beginPath();
         context.arc(x, y, radius, 0, Math.PI * 2, false);
-        context.strokeStyle = "black";
         context.stroke();
         context.closePath();
       });
 
-      context.fillRect(0, 0, width, margin);
-      context.fillRect(0, height - margin, width, margin);
-      context.fillRect(0, margin, margin, width);
-      context.fillRect(width - margin, margin, margin, width);
-
       // context.fillStyle = "black";
-      // context.fillRect(x, y, width / 100, height / 100);
+      // context.fillRect(0, 0, x, margin);
+      // context.fillRect(0, y - margin, x, margin);
+      // context.fillRect(0, margin, margin, x);
+      // context.fillRect(x - margin, margin, margin, x);
     });
-
-    // fills.forEach(data => {
-    //   const {position, radius} = data;
-    //   const [u, v] = position;
-    //   const x = lerp(margin, width - margin, u);
-    //   const y = lerp(margin, height - margin, v);
-    //
-    //   context.beginPath();
-    //   context.arc(x, y, radius, 0, Math.PI * 2, false);
-    //   context.strokeStyle = "black";
-    //   context.stroke();
-    //   context.closePath();
-    // });
-    //
-    // context.fillRect(0, 0, width, margin);
-    // context.fillRect(0, height - margin, width, margin);
-    // context.fillRect(0, margin, margin, width);
-    // context.fillRect(width - margin, margin, margin, width);
   };
 };
 
