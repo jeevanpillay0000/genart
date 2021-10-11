@@ -8,7 +8,7 @@ const settings = {
 };
 
 const sketch = () => {
-  random.setSeed(12314213242);
+  // random.setSeed(12314213242);
   const colorCount = random.rangeFloor(2, 6);
   const palette = random.shuffle(random.pick(palettes)).splice(0, colorCount);
 
@@ -18,7 +18,7 @@ const sketch = () => {
 
   const createGrid = () => {
     let points = [];
-    const color = random.pick(palette);
+    const color = "white";
     for (let x = 0; x < count; x++) {
       for (let y = 0; y < count; y++) {
         const u = count <= 1 ? 0.5 : x / (count - 1);
