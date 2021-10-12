@@ -63,13 +63,44 @@ const sketch = () => {
   return ({context, width, height}) => {
     drawBackground(context, width, height);
 
-    const squareDiameter = width / 3;
-    const circleRadius = Math.sqrt(squareDiameter ** 2 * 2) / 2;
-
-    drawGrid(context, backgroundGrid, width, height, 0, squareDiameter);
+    let d = width / 3;
+    let r = 0;
+    drawGrid(context, backgroundGrid, width, height, 0, d);
     drawMainGrid(context, mainGrid, width, height, margin, width / 19);
-    drawCircle(context, circleRadius, width, height);
+
+    let recursion = 3;
+    let pairs = [];
+
+    for (let x = 0; x < recursion; x++) {
+      r = Math.sqrt(d ** 2 * 2) / 2;
+      d = r * 2;
+      pairs.push({
+        radius: r,
+        diameter: d
+      });
+    }
+
+    pairs.reverse().forEach((item, i) => {
+      const {radius, diameter} = item;
+      drawSquare(context, diameter, width, height);
+      drawCircle(context, radius, width, height);
+    });
   };
+};
+
+const drawSquare = (context, diameter, width, height) => {
+  context.save();
+  context.beginPath();
+  context.fillStyle = "#1C9D9C";
+  context.fillRect(
+    width / 2 - diameter / 2,
+    height / 2 - diameter / 2,
+    diameter,
+    diameter
+  );
+  context.fill();
+  context.closePath();
+  context.restore();
 };
 
 const drawMainGrid = (context, grid, width, height, margin, size) => {
@@ -114,10 +145,10 @@ const drawBackground = (context, width, height) => {
   context.fillRect(0, 0, width, height);
 };
 
-const drawCircle = (context, size, width, height) => {
+const drawCircle = (context, radius, width, height) => {
   context.save();
   context.beginPath();
-  context.arc(width / 2, height / 2, size, 0, Math.PI * 2, false);
+  context.arc(width / 2, height / 2, radius, 0, Math.PI * 2, false);
   context.fillStyle = "#9C9D9C";
   context.fill();
   context.closePath();
