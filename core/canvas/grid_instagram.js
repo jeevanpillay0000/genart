@@ -8,12 +8,25 @@ const settings = {
 };
 
 const sketch = () => {
-  random.setSeed(12314213242);
+  // random.setSeed(12314213242);
   const colorCount = random.rangeFloor(2, 6);
   const palette = random.shuffle(random.pick(palettes)).splice(0, colorCount);
 
   const n = 5;
   const margin = 25;
+  const depth = 2 ** 4;
+  const recursion = 2 ** 3;
+
+  const createRecursionGrid = () => {
+    let recursions = [];
+    for (let x = 0; x < recursion; x++) {
+      recursions.push({
+        colorA: random.pick(palette),
+        colorB: random.pick(palette)
+      });
+    }
+    return recursions;
+  };
 
   const createBackgroundGrid = () => {
     let points = [];
@@ -58,46 +71,58 @@ const sketch = () => {
 
   const backgroundGrid = createBackgroundGrid();
   const mainGrid = createMainGrid();
+  const recursionGrid = createRecursionGrid();
   // .filter(() => random.value() > 0.1);
 
   return ({context, width, height}) => {
     drawBackground(context, width, height);
 
-    let d = width / 3;
+    let d = width / depth;
     let r = 0;
-    drawGrid(context, backgroundGrid, width, height, 0, d);
-    drawMainGrid(context, mainGrid, width, height, margin, width / 19);
-
-    let recursion = 3;
     let pairs = [];
-
     for (let x = 0; x < recursion; x++) {
       r = Math.sqrt(d ** 2 * 2) / 2;
       d = r * 2;
       pairs.push({
         radius: r,
-        diameter: d
+        diameter: d,
+        colors: recursionGrid.pop()
       });
     }
+    console.log(pairs);
+
+    drawGrid(context, backgroundGrid, width, height, 0, d);
+    drawMainGrid(context, mainGrid, width, height, margin, width / 19);
 
     pairs.reverse().forEach((item, i) => {
-      const {radius, diameter} = item;
-      drawSquare(context, diameter, width, height);
-      drawCircle(context, radius, width, height);
+      const {radius, diameter, colors} = item;
+      const {colorA, colorB} = colors;
+      drawSquare(context, diameter, width, height, colors.colorA);
+      drawCircle(context, radius, width, height, colors.colorB);
     });
   };
 };
 
-const drawSquare = (context, diameter, width, height) => {
+const drawSquare = (context, diameter, width, height, color) => {
   context.save();
   context.beginPath();
-  context.fillStyle = "#1C9D9C";
+  context.fillStyle = color;
   context.fillRect(
     width / 2 - diameter / 2,
     height / 2 - diameter / 2,
     diameter,
     diameter
   );
+  context.fill();
+  context.closePath();
+  context.restore();
+};
+
+const drawCircle = (context, radius, width, height, color) => {
+  context.save();
+  context.beginPath();
+  context.arc(width / 2, height / 2, radius, 0, Math.PI * 2, false);
+  context.fillStyle = color;
   context.fill();
   context.closePath();
   context.restore();
@@ -143,16 +168,6 @@ const drawGrid = (context, grid, width, height, margin, size) => {
 const drawBackground = (context, width, height) => {
   context.fillStyle = "black";
   context.fillRect(0, 0, width, height);
-};
-
-const drawCircle = (context, radius, width, height) => {
-  context.save();
-  context.beginPath();
-  context.arc(width / 2, height / 2, radius, 0, Math.PI * 2, false);
-  context.fillStyle = "#9C9D9C";
-  context.fill();
-  context.closePath();
-  context.restore();
 };
 
 const drawEquilateralTriangle = (context, side, width, height) => {
